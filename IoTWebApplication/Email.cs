@@ -28,6 +28,13 @@ namespace IoTWebApplication
             set { to_address = value; }
         }
 
+        private string stmpServerAddress;
+
+        public string SmtpServerAddress
+        {
+            get { return stmpServerAddress; }
+            set { stmpServerAddress = value; }
+        }
 
     }
 }
