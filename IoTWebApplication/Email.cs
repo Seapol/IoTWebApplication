@@ -7,6 +7,8 @@ namespace IoTWebApplication
 {
     public class Email
     {
+        List<string> CClist = new List<string>();
+
         public Email()
         {
 
