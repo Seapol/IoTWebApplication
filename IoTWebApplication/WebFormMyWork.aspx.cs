@@ -1507,6 +1507,11 @@ namespace IoTWebApplication
             //UpdateSummary();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Button7_Click(object sender, EventArgs e)
         {
 
