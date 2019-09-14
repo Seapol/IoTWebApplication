@@ -81,22 +81,21 @@
                     <asp:GridView ID="GridView2" runat="server" AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" Caption="Approved -&gt; Completion OR Working" CssClass="auto-style5" DataSourceID="SqlDataSource2" HorizontalAlign="Center" Width="90%" OnSelectedIndexChanged="GridView2_SelectedIndexChanged" EmptyDataText="&lt;&lt;&lt; Empty Working Item &gt;&gt;&gt;">
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" />
-                            <asp:BoundField DataField="UnID" HeaderText="UnID" SortExpression="UnID" />
                             <asp:BoundField DataField="DateTimeUTC" HeaderText="DateTimeUTC" SortExpression="DateTimeUTC" />
                             <asp:BoundField DataField="Initiator" HeaderText="Initiator" SortExpression="Initiator" />
-                            <asp:BoundField DataField="ProjectName" HeaderText="ProjectName" SortExpression="ProjectName" />
-                            <asp:BoundField DataField="ProjectStatus" HeaderText="ProjectStatus" SortExpression="ProjectStatus" >
+                            <asp:BoundField DataField="ProjectStatus" HeaderText="ProjectStatus" SortExpression="ProjectStatus" />
+                            <asp:BoundField DataField="DesignName" HeaderText="DesignName" SortExpression="DesignName" />
+                            <asp:BoundField DataField="VendorName" HeaderText="VendorName" SortExpression="VendorName" >
                             </asp:BoundField>
-                            <asp:BoundField DataField="ProjectMainPartFootPrintName" HeaderText="ProjectMainPartFootPrintName" SortExpression="ProjectMainPartFootPrintName" />
-                            <asp:BoundField DataField="ProjectMainPartLogicalSymbolName" HeaderText="ProjectMainPartLogicalSymbolName" SortExpression="ProjectMainPartLogicalSymbolName" />
+                            <asp:BoundField DataField="VendorPN" HeaderText="VendorPN" SortExpression="VendorPN" />
+                            <asp:BoundField DataField="FootPrintName" HeaderText="FootPrintName" SortExpression="FootPrintName" />
+                            <asp:BoundField DataField="LogicalSymbolName" HeaderText="LogicalSymbolName" SortExpression="LogicalSymbolName" />
                             <asp:BoundField DataField="CYPN" HeaderText="CYPN" SortExpression="CYPN" />
-                            <asp:BoundField DataField="IsDoubleCheck" HeaderText="IsDoubleCheck" SortExpression="IsDoubleCheck" ReadOnly="True" />
-                            <asp:BoundField DataField="Remarks" HeaderText="Remarks" SortExpression="Remarks" />
                             <asp:CommandField ButtonType="Button" HeaderText="Action" SelectText="Complete" ShowSelectButton="True" />
                         </Columns>
                     </asp:GridView>
                     <asp:Label ID="Label_WarningCompletion" runat="server" CssClass="auto-style5" Font-Bold="True" ForeColor="Red" Text="Note:**Action of Completion is irreversible. Any item cannot be modified further after completed."></asp:Label>
-                    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString15 %>" SelectCommand="SELECT [ID],[UnID], [DateTimeUTC], [Initiator], [ProjectName], [ProjectStatus], [ProjectMainPartFootPrintName], [ProjectMainPartLogicalSymbolName], [CYPN], CONVERT(nvarchar, [IsDoubleCheck]) as IsDoubleCheck , [Remarks] FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
+                    <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString15 %>" SelectCommand="SELECT [ID], [DateTimeUTC], [Initiator], [ProjectStatus], [ProjectName] as DesignName, [ProjectMainPartVendorName] as VendorName, [ProjectMainPartVendorPN] as VendorPN, [ProjectMainPartFootPrintName] as FootPrintName, [ProjectMainPartLogicalSymbolName] as LogicalSymbolName, [CYPN]  FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
                 <strong>
                     <br />
                     <br />
@@ -111,21 +110,22 @@
                         <asp:GridView ID="GridView3" runat="server" AllowPaging="True" AllowSorting="True" AutoGenerateColumns="False" Caption="Overall Review" CssClass="auto-style5" DataSourceID="SqlDataSource3" HorizontalAlign="Center" Width="90%" EmptyDataText="&lt;&lt;&lt; Empty Working Item &gt;&gt;&gt;" OnSelectedIndexChanged="GridView3_SelectedIndexChanged">
                             <Columns>
                                 <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" />
-                                <asp:BoundField DataField="UnID" HeaderText="UnID" SortExpression="UnID" />
                                 <asp:BoundField DataField="DateTimeUTC" HeaderText="DateTimeUTC" SortExpression="DateTimeUTC" />
                                 <asp:BoundField DataField="Initiator" HeaderText="Initiator" SortExpression="Initiator" />
-                                <asp:BoundField DataField="ProjectName" HeaderText="ProjectName" SortExpression="ProjectName" />
-                                <asp:BoundField DataField="ProjectCritical" HeaderText="ProjectCritical" SortExpression="ProjectCritical" />
-                                <asp:BoundField DataField="ProjectStatus" HeaderText="ProjectStatus" SortExpression="ProjectStatus" >
-                                <ItemStyle Font-Bold="True" ForeColor="#009900" />
+                                <asp:BoundField DataField="ProjectStatus" HeaderText="ProjectStatus" SortExpression="ProjectStatus" />
+                                <asp:BoundField DataField="DesignName" HeaderText="DesignName" SortExpression="DesignName" />
+                                <asp:BoundField DataField="VendorName" HeaderText="VendorName" SortExpression="VendorName" />
+                                <asp:BoundField DataField="VendorPN" HeaderText="VendorPN" SortExpression="VendorPN" >
                                 </asp:BoundField>
+                                <asp:BoundField DataField="IsCritical" HeaderText="IsCritical" SortExpression="IsCritical" />
                                 <asp:BoundField DataField="Approver" HeaderText="Approver" SortExpression="Approver" />
-                                <asp:BoundField DataField="Comments" HeaderText="Comments" SortExpression="Comments" />
-                                <asp:BoundField DataField="Remarks" HeaderText="Remarks" SortExpression="Remarks" />
+                                <asp:BoundField DataField="FootPrintName" HeaderText="FootPrintName" SortExpression="FootPrintName" />
+                                <asp:BoundField DataField="LogicalSymbolName" HeaderText="LogicalSymbolName" SortExpression="LogicalSymbolName" />
+                                <asp:BoundField DataField="CYPN" HeaderText="CYPN" SortExpression="CYPN" />
                                 <asp:CommandField ButtonType="Button" HeaderText="Action" SelectText="Review" ShowSelectButton="True" />
                             </Columns>
                         </asp:GridView>
-                        <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString16 %>" SelectCommand="SELECT [ID], [UnID], [DateTimeUTC], [Initiator], [ProjectCritical], [ProjectStatus], [Approver], [Comments], [Remarks], [ProjectName] FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
+                        <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString16 %>" SelectCommand="SELECT [ID], [DateTimeUTC], [Initiator], [ProjectStatus] , [ProjectName] as DesignName, [ProjectMainPartVendorName] as VendorName, [ProjectMainPartVendorPN] as VendorPN, [ProjectCritical] as IsCritical, [Approver], [ProjectMainPartFootPrintName] as FootPrintName, [ProjectMainPartLogicalSymbolName] as LogicalSymbolName, [CYPN] FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
                     </div>
                     <br />
                     <br />

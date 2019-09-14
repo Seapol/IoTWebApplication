@@ -9,6 +9,8 @@ using System.Collections;
 using System.Data;
 using System.IO;
 using System.Drawing;
+using Microsoft.Office.Interop.Outlook;
+
 
 
 namespace IoTWebApplication
@@ -54,9 +56,14 @@ namespace IoTWebApplication
 
             mode = Session["WorkMode"];
             var ID_number = Session["ID"];
-            var uID_number = Session["UnID"];
+            //var uID_number = Session["UnID"];
 
+            if (ID_number != null)
+            {
+                id = int.Parse(ID_number.ToString().Trim());
 
+                UnID = AcquireUnID(id);
+            }
 
 
             user = Context.User.Identity.Name.Substring(Context.User.Identity.Name.IndexOf('\\') + 1);
@@ -132,7 +139,7 @@ namespace IoTWebApplication
                             this.Response.Write("<script>alert('Acquire New Item Failure')</script>");
                         }
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
 
                         this.Response.Write("<script>alert('Acquire New Item Failure')</script>");
@@ -204,11 +211,13 @@ namespace IoTWebApplication
                 Label_ID.Text = id.ToString();
                 Label_DateTime.Text = DateTimeUTC.ToShortDateString() + " " + DateTimeUTC.ToShortTimeString();
                 Label_ProjectStatus.Text = ProjectStatus;
-                if (!IsPostBack)
-                {
-                    AcquireExistingItem(UnID);
-                    FillcontentIntoQueriedItem();
-                }
+                //if (!IsPostBack)
+                //{
+                //    AcquireExistingItem(UnID);
+                //    FillcontentIntoQueriedItem();
+                //}
+                AcquireExistingItem(UnID);
+                FillcontentIntoQueriedItem();
 
             }
             else if (mode.ToString() == WorkMode.Modify.ToString())
@@ -218,8 +227,10 @@ namespace IoTWebApplication
                 Label_User.Text = user + " (Requestor)";
 
 
+                Button2.Enabled = false;
+                Button2.ForeColor = Color.Gray;
+                Button2.BorderColor = Color.Gray;
 
-                
                 TextBox10.ReadOnly = true;
                 TextBox10.BorderColor = Color.Gray;
                 TextBox10.ForeColor = Color.Gray;
@@ -227,12 +238,12 @@ namespace IoTWebApplication
                 TextBox7.ReadOnly = false;
                 TextBox11.ReadOnly = false;
 
-                if (uID_number != null)
-                {
-                    UnID = uID_number.ToString();
-                }
+                //if (uID_number != null)
+                //{
+                //    UnID = uID_number.ToString();
+                //}
                 
-
+                
 
 
                 Button2.Enabled = false;
@@ -304,7 +315,7 @@ namespace IoTWebApplication
 
                         }
 
-                        if (ProjectStatus.Contains("Pending"))
+                        if (ProjectStatus.Contains("Pending") || ProjectStatus.Contains("Approved"))
                         {
                             Button2.Text = "Save";
                             Button3.Text = "Submit";
@@ -412,6 +423,7 @@ namespace IoTWebApplication
 
                             Button8.Enabled = false;
                             Button9.Enabled = false;
+                            Button3.Enabled = false;
 
 
                             TextBox1.ReadOnly = true;
@@ -469,6 +481,17 @@ namespace IoTWebApplication
                             LabelMisc.Visible = true;
                             LabelFootPrintFinal.Visible = true;
                             LabelLogicalSymbolFinal.Visible = true;
+                            LabelDataSheet.Visible = true;
+                            LabelFootPrint.Visible = true;
+                            LabelLogicalSymbol.Visible = true;
+
+
+                            LinkButtonDataSheet.Visible = true;
+                            LinkButtonRefFootPrint.Visible = true;
+                            LinkButtonRefLogicalSymbol.Visible = true;
+                            LinkButtonMisc.Visible = true;
+                            LinkButtonFinalFootPrint.Visible = true;
+                            LinkButtonFinalLogicalSymbol.Visible = true;
 
                             TextBox6.Visible = true;
                             TextBox7.Visible = true;
@@ -485,103 +508,13 @@ namespace IoTWebApplication
 
                         }
 
-                        if (ProjectStatus.Contains("Approved"))
-                        {
-                            Button2.Text = "Save";
-                            Button3.Text = "Submit";
-                            Button5.Text = "Exit";
-
-                            TextBox6.Visible = true;
-                            TextBox7.Visible = true;
-                            LabelFootPrintName.Visible = true;
-                            LabelLogicalSymbolName.Visible = true;
-
-                            Button8.Enabled = false;
-                            Button8.ForeColor = Color.Gray;
-                            Button9.Enabled = false;
-                            Button9.ForeColor = Color.Gray;
-
-                            TextBox1.ReadOnly = true;
-                            TextBox4.ReadOnly = true;
-                            TextBox2.ReadOnly = true;
-                            TextBox3.ReadOnly = true;
-                            TextBox6.ReadOnly = false;
-                            TextBox7.ReadOnly = false;
-                            TextBox8.ReadOnly = true;
-                            TextBox9.ReadOnly = true;
-                            TextBoxAlternativeSourceInfo.ReadOnly = true;
-
-                            TextBox1.ForeColor = Color.Gray;
-                            TextBox4.ForeColor = Color.Gray;
-                            TextBox2.ForeColor = Color.Gray;
-                            TextBox3.ForeColor = Color.Gray;
-                            TextBox6.ForeColor = Color.Black;
-                            TextBox7.ForeColor = Color.Black;
-                            TextBox8.ForeColor = Color.Gray;
-                            TextBox9.ForeColor = Color.Gray;
-                            TextBoxAlternativeSourceInfo.ForeColor = Color.Gray;
-
-                            TextBox1.BorderColor = Color.Gray;
-                            TextBox4.BorderColor = Color.Gray;
-                            TextBox2.BorderColor = Color.Gray;
-                            TextBox3.BorderColor = Color.Gray;
-                            TextBox6.BorderColor = Color.Black;
-                            TextBox7.BorderColor = Color.Black;
-                            TextBox8.BorderColor = Color.Gray;
-                            TextBox9.BorderColor = Color.Gray;
-                            TextBoxAlternativeSourceInfo.ForeColor = Color.Gray;
-
-                            FileUpload1.Visible = true;
-                            FileUpload1.Enabled = false;
-                            FileUpload1.ForeColor = Color.Gray;
-                            FileUpload2.Visible = true;
-                            FileUpload2.Enabled = false;
-                            FileUpload2.ForeColor = Color.Gray;
-                            FileUpload3.Visible = true;
-                            FileUpload3.Enabled = false;
-                            FileUpload3.ForeColor = Color.Gray;
-                            FileUpload4.Visible = true;
-                            FileUpload4.Enabled = true;
-                            LabelMisc.Visible = true;
-                            FileUpload5.Visible = true;
-                            FileUpload5.Enabled = true;
-                            LabelFootPrintFinal.Visible = true;
-
-                            FileUpload6.Visible = true;
-                            FileUpload6.Enabled = true;
-                            LabelLogicalSymbolFinal.Visible = true;
-
-                            TextBox6.Visible = true;
-                            TextBox7.Visible = true;
-                            LabelFootPrintName.Visible = true;
-                            LabelLogicalSymbolName.Visible = true;
-
-                            LabelSummary.Visible = false;
-                            TextBox5.Visible = false;
-                            LabelComments.Visible = true;
-                            TextBox10.Visible = true;
-                            LabelRemarks.Visible = true;
-                            TextBox11.Visible = true;
-
-                            LabelCYPN.Visible = true;
-                            TextBoxCYPN.Visible = true;
-                            TextBoxCYPN.ReadOnly = false;
-
-                            TextBoxSpecialRequirements.ReadOnly = true;
-                            TextBoxSpecialRequirements.ForeColor = Color.Gray;
-                            TextBoxSpecialRequirements.BorderColor = Color.Gray;
-
-                            CheckBox1.Enabled = false;
-                            CheckBox2.Enabled = false;
-
-
-                        }
+                        
 
                         if (ProjectStatus.Contains("Working"))
                         {
                             Button2.Text = "Save";
-                            Button3.Text = "Submit";
-                            Button5.Text = "Exit";
+                            Button3.Text = "Agree";
+                            Button5.Text = "Disagree";
 
                             TextBox6.Visible = true;
                             TextBox7.Visible = true;
@@ -678,18 +611,22 @@ namespace IoTWebApplication
                 Approver = user;
                 Label_User.Text = user + " (Approver)";
 
-
+                Button2.Enabled = false;
+                Button2.ForeColor = Color.Gray;
+                Button2.BorderColor = Color.Gray;
 
                 FileUpload4.Visible = true;
                 TextBox10.ReadOnly = false;
                 TextBox6.ReadOnly = false;
                 TextBox7.ReadOnly = false;
                 TextBox11.ReadOnly = true;
-                if (uID_number != null)
-                {
-                    UnID = uID_number.ToString();
-                }
+                //if (uID_number != null)
+                //{
+                //    UnID = uID_number.ToString();
+                //}
 
+
+                
                 AcquireExistingItem(UnID);
                 FillcontentIntoQueriedItem();
                 UpdateSummary();
@@ -700,15 +637,25 @@ namespace IoTWebApplication
 
                     if (ProjectStatus != null)
                     {
-                        if (ProjectStatus.Contains("UnSubmitted") || ProjectStatus.Contains("Completed"))
+                        if (ProjectStatus.Contains("UnSubmitted"))
                         {
-                            Button3.Enabled = false;
-                            Button3.ForeColor = Color.Gray;
-                            Button3.BorderColor = Color.Gray;
+                            Button2.Text = "Save";
+                            Button3.Text = "Submit";
+                            Button5.Text = "Exit";
 
-                            Button7.Enabled = false;
-                            Button7.ForeColor = Color.Gray;
-                            Button7.BorderColor = Color.Gray;
+                            TextBox6.Visible = true;
+                            TextBox7.Visible = true;
+                            LabelFootPrintName.Visible = true;
+                            LabelLogicalSymbolName.Visible = true;
+                            LabelCYPN.Visible = true;
+                            TextBoxCYPN.Visible = true;
+
+                            CheckBox1.Enabled = false;
+                            CheckBox2.Enabled = false;
+
+                            Button8.Enabled = false;
+                            Button9.Enabled = false;
+
 
                             TextBox1.ReadOnly = true;
                             TextBox4.ReadOnly = true;
@@ -718,10 +665,10 @@ namespace IoTWebApplication
                             TextBox7.ReadOnly = true;
                             TextBox8.ReadOnly = true;
                             TextBox9.ReadOnly = true;
-                            TextBox5.ReadOnly = true;
-                            TextBox10.ReadOnly = true;
                             TextBox11.ReadOnly = true;
-
+                            TextBoxSpecialRequirements.ReadOnly = true;
+                            TextBoxCYPN.ReadOnly = true;
+                            TextBoxAlternativeSourceInfo.ReadOnly = true;
 
                             TextBox1.ForeColor = Color.Gray;
                             TextBox4.ForeColor = Color.Gray;
@@ -731,9 +678,10 @@ namespace IoTWebApplication
                             TextBox7.ForeColor = Color.Gray;
                             TextBox8.ForeColor = Color.Gray;
                             TextBox9.ForeColor = Color.Gray;
-                            TextBox5.ForeColor = Color.Gray;
-                            TextBox10.ForeColor = Color.Gray;
                             TextBox11.ForeColor = Color.Gray;
+                            TextBoxSpecialRequirements.ForeColor = Color.Gray;
+                            TextBoxCYPN.ForeColor = Color.Gray;
+                            TextBoxAlternativeSourceInfo.ForeColor = Color.Gray;
 
                             TextBox1.BorderColor = Color.Gray;
                             TextBox4.BorderColor = Color.Gray;
@@ -743,85 +691,10 @@ namespace IoTWebApplication
                             TextBox7.BorderColor = Color.Gray;
                             TextBox8.BorderColor = Color.Gray;
                             TextBox9.BorderColor = Color.Gray;
-                            TextBox5.BorderColor = Color.Gray;
-                            TextBox10.BorderColor = Color.Gray;
                             TextBox11.BorderColor = Color.Gray;
-
-                            FileUpload1.Visible = false;
-                            FileUpload1.Enabled = false;
-                            FileUpload2.Visible = false;
-                            FileUpload2.Enabled = false;
-                            FileUpload3.Visible = false;
-                            FileUpload3.Enabled = false;
-                            FileUpload4.Visible = false;
-                            FileUpload4.Enabled = false;
-                            FileUpload5.Visible = false;
-                            FileUpload5.Enabled = false;
-                            FileUpload6.Visible = false;
-                            FileUpload6.Enabled = false;
-
-                            Button3.Enabled = false;
-
-                            Button5.Enabled = true;
-                            Button5.Text = "Exit";
-                        }
-
-                        if (ProjectStatus.Contains("Approved") || ProjectStatus.Contains("Rejected"))
-                        {
-                            //Button3.Enabled = false;
-                            //Button3.ForeColor = Color.Gray;
-                            //Button3.BorderColor = Color.Gray;
-
-                            //Button7.Enabled = false;
-                            //Button7.ForeColor = Color.Gray;
-                            //Button7.BorderColor = Color.Gray;
-
-                            TextBox1.ReadOnly = true;
-                            TextBox4.ReadOnly = true;
-                            TextBox2.ReadOnly = true;
-                            TextBox3.ReadOnly = true;
-                            TextBox6.ReadOnly = true;
-                            TextBox7.ReadOnly = true;
-                            TextBox8.ReadOnly = true;
-                            TextBox9.ReadOnly = true;
-                            TextBox5.ReadOnly = true;
-                            TextBox10.ReadOnly = true;
-                            TextBox11.ReadOnly = true;
-                            TextBoxAlternativeSourceInfo.ReadOnly = true;
-                            TextBoxSpecialRequirements.ReadOnly = true;
-                            TextBoxCYPN.ReadOnly = true;
-
-                            TextBox1.ForeColor = Color.Black;
-                            TextBox4.ForeColor = Color.Black;
-                            TextBox2.ForeColor = Color.Black;
-                            TextBox3.ForeColor = Color.Black;
-                            TextBox6.ForeColor = Color.Black;
-                            TextBox7.ForeColor = Color.Black;
-                            TextBox8.ForeColor = Color.Black;
-                            TextBox9.ForeColor = Color.Black;
-                            TextBox5.ForeColor = Color.Black;
-                            TextBox10.ForeColor = Color.Black;
-                            TextBox11.ForeColor = Color.Black;
-
-                            TextBox1.BorderColor = Color.Black;
-                            TextBox4.BorderColor = Color.Black;
-                            TextBox2.BorderColor = Color.Black;
-                            TextBox3.BorderColor = Color.Black;
-                            TextBox6.BorderColor = Color.Black;
-                            TextBox7.BorderColor = Color.Black;
-                            TextBox8.BorderColor = Color.Black;
-                            TextBox9.BorderColor = Color.Black;
-                            TextBox5.BorderColor = Color.Black;
-                            TextBox10.BorderColor = Color.Black;
-                            TextBox11.BorderColor = Color.Black;
-
-
-                            LabelDataSheet.Visible = true;
-                            LabelFootPrint.Visible = true;
-                            LabelLogicalSymbol.Visible = true;
-                            LabelMisc.Visible = true;
-                            LabelFootPrintFinal.Visible = true;
-                            LabelLogicalSymbolFinal.Visible = true;
+                            TextBoxCYPN.BorderColor = Color.Gray;
+                            TextBoxSpecialRequirements.BorderColor = Color.Gray;
+                            TextBoxAlternativeSourceInfo.BorderColor = Color.Gray;
 
                             FileUpload1.Visible = true;
                             FileUpload1.Enabled = false;
@@ -831,14 +704,29 @@ namespace IoTWebApplication
                             FileUpload3.Enabled = false;
                             FileUpload4.Visible = true;
                             FileUpload4.Enabled = false;
+                            FileUpload5.Visible = true;
+                            FileUpload5.Enabled = false;
+                            FileUpload6.Visible = true;
+                            FileUpload6.Enabled = false;
 
-                            LinkButtonDataSheet.Visible = true;
-                            LinkButtonRefFootPrint.Visible = true;
-                            LinkButtonRefLogicalSymbol.Visible = true;
-                            LinkButtonMisc.Visible = true;
-                            LinkButtonFinalFootPrint.Visible = true;
-                            LinkButtonFinalLogicalSymbol.Visible = true;
+                            LabelMisc.Visible = true;
+                            LabelFootPrintFinal.Visible = true;
+                            LabelLogicalSymbolFinal.Visible = true;
+
+                            TextBox6.Visible = true;
+                            TextBox7.Visible = true;
+                            LabelFootPrintName.Visible = true;
+                            LabelLogicalSymbolName.Visible = true;
+
+                            LabelSummary.Visible = true;
+                            TextBox5.Visible = true;
+                            LabelComments.Visible = true;
+                            TextBox10.Visible = true;
+                            LabelRemarks.Visible = true;
+                            TextBox11.Visible = true;
                         }
+
+                        
 
                         if (ProjectStatus.Contains("Working"))
                         {
@@ -931,26 +819,244 @@ namespace IoTWebApplication
 
 
                         }
+
+                        if (ProjectStatus.Contains("Pending") || ProjectStatus.Contains("Approved") || ProjectStatus.Contains("Rejected"))
+                        {
+                            Button2.Text = "Save";
+                            Button3.Text = "Submit";
+                            Button5.Text = "Exit";
+
+                            Button3.Enabled = false;
+                            Button3.ForeColor = Color.Gray;
+                            Button3.BorderColor = Color.Gray;
+
+                            Button7.Enabled = false;
+                            Button7.ForeColor = Color.Gray;
+                            Button7.BorderColor = Color.Gray;
+
+                            CheckBox1.Enabled = false;
+                            CheckBox2.Enabled = false;
+
+                            Button8.Enabled = false;
+                            Button9.Enabled = false;
+
+                            LabelMisc.Visible = false;
+
+                            TextBox1.ReadOnly = true;
+                            TextBox4.ReadOnly = true;
+                            TextBox2.ReadOnly = true;
+                            TextBox3.ReadOnly = true;
+                            TextBox6.ReadOnly = true;
+                            TextBox7.ReadOnly = true;
+                            TextBox8.ReadOnly = true;
+                            TextBox9.ReadOnly = true;
+                            TextBox10.ReadOnly = true;
+                            TextBox11.ReadOnly = true;
+                            TextBoxSpecialRequirements.ReadOnly = true;
+                            TextBoxAlternativeSourceInfo.ReadOnly = true;
+
+                            TextBox1.ForeColor = Color.Gray;
+                            TextBox4.ForeColor = Color.Gray;
+                            TextBox2.ForeColor = Color.Gray;
+                            TextBox3.ForeColor = Color.Gray;
+                            TextBox6.ForeColor = Color.Gray;
+                            TextBox7.ForeColor = Color.Gray;
+                            TextBox8.ForeColor = Color.Gray;
+                            TextBox9.ForeColor = Color.Gray;
+                            TextBox10.ForeColor = Color.Gray;
+                            TextBox11.ForeColor = Color.Gray;
+                            TextBoxSpecialRequirements.ForeColor = Color.Gray;
+                            TextBoxAlternativeSourceInfo.ForeColor = Color.Gray;
+
+                            TextBox1.BorderColor = Color.Gray;
+                            TextBox4.BorderColor = Color.Gray;
+                            TextBox2.BorderColor = Color.Gray;
+                            TextBox3.BorderColor = Color.Gray;
+                            TextBox6.BorderColor = Color.Gray;
+                            TextBox7.BorderColor = Color.Gray;
+                            TextBox8.BorderColor = Color.Gray;
+                            TextBox9.BorderColor = Color.Gray;
+                            TextBox10.BorderColor = Color.Gray;
+                            TextBox11.BorderColor = Color.Gray;
+                            TextBoxSpecialRequirements.BorderColor = Color.Gray;
+                            TextBoxAlternativeSourceInfo.BorderColor = Color.Gray;
+
+
+                            TextBox6.Visible = false;
+                            TextBox7.Visible = false;
+                            LabelFootPrintName.Visible = false;
+                            LabelLogicalSymbolName.Visible = false;
+
+                            FileUpload1.Visible = true;
+                            FileUpload1.Enabled = false;
+                            FileUpload2.Visible = true;
+                            FileUpload2.Enabled = false;
+                            FileUpload3.Visible = true;
+                            FileUpload3.Enabled = false;
+                            FileUpload4.Visible = false;
+                            FileUpload4.Enabled = false;
+                            FileUpload5.Visible = false;
+                            FileUpload5.Enabled = false;
+                            FileUpload6.Visible = false;
+                            FileUpload6.Enabled = false;
+
+                            LabelSummary.Visible = true;
+                            TextBox5.Visible = true;
+                            LabelComments.Visible = false;
+                            TextBox10.Visible = false;
+                            LabelRemarks.Visible = false;
+                            TextBox11.Visible = false;
+
+
+                        }
+
+                        if (ProjectStatus.Contains("Completed"))
+                        {
+                            Button2.Text = "Delete";
+                            Button2.ForeColor = Color.Red;
+                            //Button2.Enabled = true;
+                            Button3.Text = "Submit";
+                            Button5.Text = "Exit";
+
+                            TextBox6.Visible = true;
+                            TextBox7.Visible = true;
+                            LabelFootPrintName.Visible = true;
+                            LabelLogicalSymbolName.Visible = true;
+                            LabelCYPN.Visible = true;
+                            TextBoxCYPN.Visible = true;
+
+                            CheckBox1.Enabled = false;
+                            CheckBox2.Enabled = false;
+
+                            Button8.Enabled = false;
+                            Button9.Enabled = false;
+                            Button3.Enabled = false;
+
+
+                            TextBox1.ReadOnly = true;
+                            TextBox4.ReadOnly = true;
+                            TextBox2.ReadOnly = true;
+                            TextBox3.ReadOnly = true;
+                            TextBox6.ReadOnly = true;
+                            TextBox7.ReadOnly = true;
+                            TextBox8.ReadOnly = true;
+                            TextBox9.ReadOnly = true;
+                            TextBox11.ReadOnly = true;
+                            TextBoxSpecialRequirements.ReadOnly = true;
+                            TextBoxCYPN.ReadOnly = true;
+                            TextBoxAlternativeSourceInfo.ReadOnly = true;
+
+                            TextBox1.ForeColor = Color.Gray;
+                            TextBox4.ForeColor = Color.Gray;
+                            TextBox2.ForeColor = Color.Gray;
+                            TextBox3.ForeColor = Color.Gray;
+                            TextBox6.ForeColor = Color.Gray;
+                            TextBox7.ForeColor = Color.Gray;
+                            TextBox8.ForeColor = Color.Gray;
+                            TextBox9.ForeColor = Color.Gray;
+                            TextBox11.ForeColor = Color.Gray;
+                            TextBoxSpecialRequirements.ForeColor = Color.Gray;
+                            TextBoxCYPN.ForeColor = Color.Gray;
+                            TextBoxAlternativeSourceInfo.ForeColor = Color.Gray;
+
+                            TextBox1.BorderColor = Color.Gray;
+                            TextBox4.BorderColor = Color.Gray;
+                            TextBox2.BorderColor = Color.Gray;
+                            TextBox3.BorderColor = Color.Gray;
+                            TextBox6.BorderColor = Color.Gray;
+                            TextBox7.BorderColor = Color.Gray;
+                            TextBox8.BorderColor = Color.Gray;
+                            TextBox9.BorderColor = Color.Gray;
+                            TextBox11.BorderColor = Color.Gray;
+                            TextBoxCYPN.BorderColor = Color.Gray;
+                            TextBoxSpecialRequirements.BorderColor = Color.Gray;
+                            TextBoxAlternativeSourceInfo.BorderColor = Color.Gray;
+
+                            FileUpload1.Visible = true;
+                            FileUpload1.Enabled = false;
+                            FileUpload2.Visible = true;
+                            FileUpload2.Enabled = false;
+                            FileUpload3.Visible = true;
+                            FileUpload3.Enabled = false;
+                            FileUpload4.Visible = true;
+                            FileUpload4.Enabled = false;
+                            FileUpload5.Visible = true;
+                            FileUpload5.Enabled = false;
+                            FileUpload6.Visible = true;
+                            FileUpload6.Enabled = false;
+
+                            LabelMisc.Visible = true;
+                            LabelFootPrintFinal.Visible = true;
+                            LabelLogicalSymbolFinal.Visible = true;
+                            LabelDataSheet.Visible = true;
+                            LabelFootPrint.Visible = true;
+                            LabelLogicalSymbol.Visible = true;
+
+
+                            LinkButtonDataSheet.Visible = true;
+                            LinkButtonRefFootPrint.Visible = true;
+                            LinkButtonRefLogicalSymbol.Visible = true;
+                            LinkButtonMisc.Visible = true;
+                            LinkButtonFinalFootPrint.Visible = true;
+                            LinkButtonFinalLogicalSymbol.Visible = true;
+
+                            TextBox6.Visible = true;
+                            TextBox7.Visible = true;
+                            LabelFootPrintName.Visible = true;
+                            LabelLogicalSymbolName.Visible = true;
+
+                            LabelSummary.Visible = true;
+                            TextBox5.Visible = true;
+                            LabelComments.Visible = true;
+                            TextBox10.Visible = true;
+                            LabelRemarks.Visible = true;
+                            TextBox11.Visible = true;
+
+
+                        }
                     }
 
 
                 }
 
-                Button2.Enabled = false;
-                Button2.ForeColor = Color.Gray;
-                Button2.BorderColor = Color.Gray;
+                if (ProjectStatus != null)
+                {
+                    if (!ProjectStatus.Contains("Completed"))
+                    {
+                        Button2.Text = "Delete";
+                        Button2.ForeColor = Color.Red;
+                        Button2.Enabled = true;
+                    }
+                }
 
 
 
             }
 
 
+            Button7.Visible = false;
 
 
 
 
 
+        }
 
+        private string AcquireUnID(int id)
+        {
+            //SqlDataSourceAll.SelectCommand = String.Format("select [UnID] where [ID] = {0} ",id);
+            //IEnumerable rows = SqlDataSourceAll.Select(DataSourceSelectArguments.Empty);
+
+            IEnumerable rows = SqlDataSource9.Select(DataSourceSelectArguments.Empty);
+
+            foreach (DataRowView row in rows)
+            {
+                
+                UnID = row[0].ToString();
+
+            }
+
+            return UnID;
         }
 
         private void FillcontentIntoQueriedItem()
@@ -1285,7 +1391,22 @@ namespace IoTWebApplication
             {
                 this.Response.Write("<script>alert('Delete the Unsubmitted item from database failure!!!')</script>");
             }
-            
+
+            if (mode.ToString() == WorkMode.Modify.ToString())
+            {
+                if (ProjectStatus != null)
+                {
+                    if (ProjectStatus.Contains("Working"))
+                    {
+                        this.Response.Write("<script>alert('Requestor disagreed the approver's working content and ProjectStatus goes back to Approved!!!')</script>");
+                        ProjectStatus = "Approved";
+                        Update2Database(nameof(ProjectStatus).ToString(),ProjectStatus);
+                        Update2Database(nameof(Remarks).ToString(), Remarks);
+                    }
+                }
+            }
+
+
 
             this.Response.Write("<script>window.location='Default.aspx'</script>");
         }
@@ -1316,37 +1437,37 @@ namespace IoTWebApplication
             if (ProjectStatus != null)
             {
                 TextBox5.Text = "";
-                TextBox5.Text += String.Format("Hello, {0}! \n\n", Initiator);
+                TextBox5.Text += String.Format("Hello, {0}! \n\n", user);
                 TextBox5.Text += String.Format("Below information is created on {0}. \n", DateTimeUTC);
-                TextBox5.Text += String.Format("<<======================= Work Basic Information ===================>> \n");
-                TextBox5.Text += String.Format("[ProjectName]:                                      \t\t\t\t{0} \n", ProjectName);
-                TextBox5.Text += String.Format("[ProjectID]:                                        \t\t\t\t#{0} \n", id.ToString());
-                TextBox5.Text += String.Format("[ProjectStatus]:                                    \t\t\t\t{0} \n", ProjectStatus);
-                TextBox5.Text += String.Format("[ProjectCritical]:                                  \t\t\t\t{0} \n", ProjectCritical);
-                TextBox5.Text += String.Format("[IsDoubleCheck]:                                    \t\t\t\t{0} \n", IsDoubleCheck.ToString());
-                TextBox5.Text += String.Format("[ProjectMainPartVendorName]:                        \t\t\t\t{0} \n", ProjectMainPartVendorName);
-                TextBox5.Text += String.Format("[ProjectMainPartVendorPN]:                          \t\t\t\t{0} \n", ProjectMainPartVendorPN);
-                TextBox5.Text += String.Format("[ProjectMainPartDescription]:                       \n{0} \n", ProjectMainPartDescription);
-                TextBox5.Text += String.Format("[ProjectMainPartStoredFileDataSheet]:               \t\t\t\t{0} \n", ProjectMainPartStoredFileDataSheet);
-                TextBox5.Text += String.Format("[ProjectMainPartStoredFileFootPrint]:               \t\t\t\t{0} \n", ProjectMainPartStoredFileFootPrint);
-                TextBox5.Text += String.Format("[ProjectMainPartStoredFileLogicalSymbol]:           \t\t\t\t{0} \n", ProjectMainPartStoredFileLogicalSymbol);
-                TextBox5.Text += String.Format("[ProjectAlternativeSourceInfo]: \n{0} \n", ProjectAlternativeSourceInfo);
-                TextBox5.Text += String.Format("[SpecialRequirements]: \n{0} \n", SpecialRequirements);
-                TextBox5.Text += String.Format("<<======================= Work Basic Information ===================>> \n");
+                TextBox5.Text += String.Format("<<=========================================================== Work Basic Information ======================================================>> \n");
+                TextBox5.Text += String.Format("[ProjectName                            ]:           \t\t\t\t{0} \n", ProjectName);
+                TextBox5.Text += String.Format("[ProjectID                              ]:           \t\t\t\t#{0} \n", id.ToString());
+                TextBox5.Text += String.Format("[ProjectStatus                          ]:           \t\t\t\t{0} \n", ProjectStatus);
+                TextBox5.Text += String.Format("[ProjectCritical                        ]:           \t\t\t\t{0} \n", ProjectCritical);
+                TextBox5.Text += String.Format("[IsDoubleCheck                          ]:           \t\t\t\t{0} \n", IsDoubleCheck.ToString());
+                TextBox5.Text += String.Format("[ProjectMainPartVendorName              ]:           \t\t\t\t{0} \n", ProjectMainPartVendorName);
+                TextBox5.Text += String.Format("[ProjectMainPartVendorPN                ]:           \t\t\t\t{0} \n", ProjectMainPartVendorPN);
+                TextBox5.Text += String.Format("[ProjectMainPartStoredFileDataSheet     ]:           \t\t\t\t{0} \n", ProjectMainPartStoredFileDataSheet);
+                TextBox5.Text += String.Format("[ProjectMainPartStoredFileFootPrint     ]:           \t\t\t\t{0} \n", ProjectMainPartStoredFileFootPrint);
+                TextBox5.Text += String.Format("[ProjectMainPartStoredFileLogicalSymbol ]:           \t\t\t\t{0} \n", ProjectMainPartStoredFileLogicalSymbol);
+                TextBox5.Text += String.Format("[ProjectMainPartDescription             ]: \n{0} \n", ProjectMainPartDescription);
+                TextBox5.Text += String.Format("[ProjectAlternativeSourceInfo           ]: \n{0} \n", ProjectAlternativeSourceInfo);
+                TextBox5.Text += String.Format("[SpecialRequirements                    ]: \n{0} \n", SpecialRequirements);
+                TextBox5.Text += String.Format("<<=========================================================== Work Basic Information ======================================================>> \n");
 
                 if (ProjectStatus.Contains("Approved")|| ProjectStatus.Contains("Working")|| ProjectStatus.Contains("Completed"))
                 {
                     TextBox5.Text += String.Format("\n\nApprover: \n{0} \n", Approver);
-                    TextBox5.Text += String.Format("<<======================= Review Work Result ===================>> \n");
-                    TextBox5.Text += String.Format("[CYPN]:                                         \t\t\t\t{0} \n", CYPN);
-                    TextBox5.Text += String.Format("[ProjectMainPartFootPrintName]:                 \t\t\t\t{0} \n", ProjectMainPartFootPrintName);
-                    TextBox5.Text += String.Format("[ProjectMainPartLogicalSymbolName]:             \t\t\t\t{0} \n", ProjectMainPartLogicalSymbolName);
-                    TextBox5.Text += String.Format("[MiscStoredFile]:                               \t\t\t\t{0} \n", MiscStoredFile);
-                    TextBox5.Text += String.Format("[ProjectMainPartStoredFileFootPrintFinal]:      \t\t\t\t{0} \n", ProjectMainPartStoredFileFootPrintFinal);
-                    TextBox5.Text += String.Format("[ProjectMainPartStoredFileLogicalSymbolFinal]:  \t\t\t\t{0} \n", ProjectMainPartStoredFileLogicalSymbolFinal);
-                    TextBox5.Text += String.Format("[Comments]: {0} \n", Comments);
+                    TextBox5.Text += String.Format("<<=========================================================== Review Work Result ======================================================>> \n");
+                    TextBox5.Text += String.Format("[CYPN                                       ]:      \t\t\t\t{0} \n", CYPN);
+                    TextBox5.Text += String.Format("[ProjectMainPartFootPrintName               ]:      \t\t\t\t{0} \n", ProjectMainPartFootPrintName);
+                    TextBox5.Text += String.Format("[ProjectMainPartLogicalSymbolName           ]:      \t\t\t\t{0} \n", ProjectMainPartLogicalSymbolName);
+                    TextBox5.Text += String.Format("[MiscStoredFile                             ]:      \t\t\t\t{0} \n", MiscStoredFile);
+                    TextBox5.Text += String.Format("[ProjectMainPartStoredFileFootPrintFinal    ]:      \t\t\t\t{0} \n", ProjectMainPartStoredFileFootPrintFinal);
+                    TextBox5.Text += String.Format("[ProjectMainPartStoredFileLogicalSymbolFinal]:      \t\t\t\t{0} \n", ProjectMainPartStoredFileLogicalSymbolFinal);
+                    TextBox5.Text += String.Format("[Comments]:{0} \n", Comments);
                     TextBox5.Text += String.Format("[Remarks]: {0} offer the following remarks \n{1}\n", Initiator, Remarks);
-                    TextBox5.Text += String.Format("<<======================= Review Work Result ===================>> \n");
+                    TextBox5.Text += String.Format("<<=========================================================== Review Work Result ======================================================>> \n");
                 }
 
             }
@@ -1481,7 +1602,7 @@ namespace IoTWebApplication
 
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 this.Response.Write(String.Format(@"<script>alert('{0}: {1}')</script>", ex.Source, ex.Message));
             }
@@ -1562,6 +1683,7 @@ namespace IoTWebApplication
 
         protected void CheckBox2_CheckedChanged(object sender, EventArgs e)
         {
+
             int bit = -1;
 
             if (CheckBox1.Checked)
@@ -1585,6 +1707,37 @@ namespace IoTWebApplication
 
         protected void Button2_Click(object sender, EventArgs e)
         {
+
+            int Cnt = -1;
+
+            if (mode.ToString() == WorkMode.Review.ToString())
+            {
+
+                SqlDataSource1.DeleteCommand = String.Format(
+@"DELETE FROM [dbo].[Items1]
+      WHERE [ID] = '{0}'", id.ToString());
+
+                Cnt = SqlDataSource1.Delete();
+
+                if (Cnt == 0)
+                {
+                    //this.Response.Write("<script>alert('Go back to Homepage ... ')</script>");
+                }
+                else if (Cnt > 0)
+                {
+                    this.Response.Write("<script>alert('Delete the Unsubmitted item from database successfully!!!')</script>");
+                }
+                else
+                {
+                    this.Response.Write("<script>alert('Delete the Unsubmitted item from database failure!!!')</script>");
+                }
+
+            }
+            else
+            {
+                Cnt = 0;
+            }
+
             UpdateSummary();
 
             if (Update2Database() > 0)
@@ -1628,7 +1781,7 @@ UPDATE [dbo].[Items1]
                     Cnt = SqlDataSourceAll.Update();
 
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     string msg = String.Format("<script>alert('Fail to Update data to SQL Server dut that {0}')</script>", ex);
                     this.Response.Write(msg);
@@ -1664,7 +1817,7 @@ UPDATE [dbo].[Items1]
                     Cnt = SqlDataSourceAll.Update();
 
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
 
                     string msg = String.Format("<script>alert('Fail to Update data to SQL Server dut that {0}')</script>", ex);
@@ -1726,7 +1879,7 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
                     Cnt = SqlDataSource1.Update();
 
                 }
-                catch (Exception)
+                catch (System.Exception ex)
                 {
 
                     this.Response.Write("<script>alert('Fail to Update data to SQL Server when Save()')</script>");
@@ -1818,7 +1971,7 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
                     }
                 }
                 }
-            catch (Exception)
+            catch (System.Exception ex)
             {
 
                 
@@ -1842,6 +1995,8 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             }
 
 
+            Button7_Click(this, EventArgs.Empty);
+
             if (mode.ToString() == WorkMode.New.ToString())
             {
                 ProjectStatus = "Pending";
@@ -1852,20 +2007,32 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             }
             else if (mode.ToString() == WorkMode.Modify.ToString() && (ProjectStatus.Contains("Working")))
             {
-                if (Remarks.Length > 0)
-                {
-                    ProjectStatus = "Completed";
-                }
-                else
-                {
-                    ProjectStatus = "Working";
-                    this.Response.Write("<script>alert('This item cannot be completed because it requires remarks by initiator')</script>");
-                    return;
-                }
-                
+                Update2Database(nameof(Remarks).ToString(), Remarks);
+                ProjectStatus = "Completed";
+                //if (Remarks.Length > 0)
+                //{
+                //    ProjectStatus = "Completed";
+                //}
+                //else
+                //{
+                //    ProjectStatus = "Working";
+                //    this.Response.Write("<script>alert('This item cannot be completed because it requires remarks by initiator')</script>");
+                //    return;
+                //}
+
             }
-            else if (mode.ToString() == WorkMode.Review.ToString())
+
+            if (mode.ToString() == WorkMode.Review.ToString())
             {
+                Update2Database(nameof(Comments).ToString(),Comments);
+                Update2Database(nameof(CYPN).ToString(), CYPN);
+                Update2Database(nameof(ProjectMainPartFootPrintName).ToString(), ProjectMainPartFootPrintName);
+                Update2Database(nameof(ProjectMainPartLogicalSymbolName).ToString(), ProjectMainPartFootPrintName);
+                Update2Database(nameof(MiscStoredFile).ToString(), MiscStoredFile);
+                Update2Database(nameof(ProjectMainPartStoredFileFootPrintFinal).ToString(), ProjectMainPartStoredFileFootPrintFinal);
+                Update2Database(nameof(ProjectMainPartStoredFileLogicalSymbolFinal).ToString(), ProjectMainPartStoredFileLogicalSymbolFinal);
+
+
                 if (ProjectStatus.Contains("Working") && !IsDoubleCheck)
                 {
                     ProjectStatus = "Completed";
@@ -1895,8 +2062,80 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
 
             UpdateSummary();
 
+            if (ProjectStatus != null)
+            {
+                SendEmail(ProjectStatus);
+            }
+            
+
+
+            
+
+
+
+
             this.Response.Write("<script>window.location='Default.aspx'</script>");
 
+        }
+
+        private void SendEmail(string projectStatus)
+        {
+            Email email = new Email();
+
+            email.Subject = @"Message Info from bmochina01/iot/";
+
+            email.To_address = user.Trim() + "@cypress.com;";
+
+
+            if (projectStatus.Contains("Pending"))
+            {
+                
+                
+                email.Title = String.Format("IoT Part Request – submitted > Request ID#{0} has been submitted", id);
+            }
+            else if (projectStatus.Contains("Working"))
+            {
+                
+
+                if (IsDoubleCheck)
+                {
+                    email.Title = String.Format("IoT Part Request – approved > Request ID#{0} has been approved.", id);
+                }
+                else
+                {
+                    email.Title = String.Format("IoT Part Request – approved > Request ID#{0} has been approved.", id);
+                }
+                
+            }
+            else if (projectStatus.Contains("Completed"))
+            {
+                
+
+                email.Title = String.Format("IoT Part Request – completed > Request ID#{0} has been approved.", id);
+            }
+
+            string body = Summary.Replace("\n", "<br />");
+            body = body.Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            string content = String.Format("<HTML><H2>{0}</H2><BODY>{1}</BODY></HTML>", email.Title, body);
+
+            if (projectStatus.Contains("Pending"))
+            {
+                //email.CC_address = Approver.Trim() + "@cypress.com;";
+            }
+            else if (projectStatus.Contains("Working"))
+            {
+                email.To_address = Initiator.Trim() + "@cypress.com;";
+                email.CC_address = Approver.Trim() + "@cypress.com;";
+            }
+            else if (projectStatus.Contains("Completed"))
+            {
+                email.To_address = Initiator.Trim() + "@cypress.com;";
+                email.CC_address = Approver.Trim() + "@cypress.com;";
+            }
+
+
+            Email.Send(email.To_address, email.CC_address,email.Subject, content);
         }
 
         private bool CheckRequiredItemIsNotNull()
@@ -1987,6 +2226,7 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             if ((TextBox8.Text.Length>0 && TextBox9.Text.Length>0))
             {
             ProjectAlternativeSourceInfo += "\nAlternative Vendor Name: " + TextBox8.Text + "\t\tVendor Part Number: " + TextBox9.Text;
+                ProjectAlternativeSourceInfo = ProjectAlternativeSourceInfo.Trim().Replace("&nbsp;","");
             TextBoxAlternativeSourceInfo.Text = ProjectAlternativeSourceInfo.Trim();
             TextBox8.Text = "";
             TextBox9.Text = "";
@@ -2048,11 +2288,15 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             AcquireExistingItem(UnID);
             if (File.Exists(ProjectMainPartStoredFileDataSheet))
             {
-                
-                var path = ProjectMainPartStoredFileDataSheet.Trim();
+
+                var filefullpath = ProjectMainPartStoredFileDataSheet.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
 
@@ -2064,10 +2308,14 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             if (File.Exists(ProjectMainPartStoredFileFootPrint))
             {
 
-                var path = ProjectMainPartStoredFileFootPrint.Trim();
+                var filefullpath = ProjectMainPartStoredFileFootPrint.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
         }
@@ -2078,10 +2326,14 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             if (File.Exists(ProjectMainPartStoredFileLogicalSymbol))
             {
 
-                var path = ProjectMainPartStoredFileLogicalSymbol.Trim();
+                var filefullpath = ProjectMainPartStoredFileLogicalSymbol.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
 
@@ -2093,10 +2345,14 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             if (File.Exists(MiscStoredFile))
             {
 
-                var path = MiscStoredFile.Trim();
+                var filefullpath = MiscStoredFile.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
 
@@ -2108,10 +2364,14 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             if (File.Exists(ProjectMainPartStoredFileFootPrintFinal))
             {
 
-                var path = ProjectMainPartStoredFileFootPrintFinal.Trim();
+                var filefullpath = ProjectMainPartStoredFileFootPrintFinal.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
 
@@ -2123,10 +2383,14 @@ ProjectMainPartStoredFileFootPrintFinal, ProjectMainPartStoredFileLogicalSymbolF
             if (File.Exists(ProjectMainPartStoredFileLogicalSymbolFinal))
             {
 
-                var path = ProjectMainPartStoredFileLogicalSymbolFinal.Trim();
+                var filefullpath = ProjectMainPartStoredFileLogicalSymbolFinal.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
         }

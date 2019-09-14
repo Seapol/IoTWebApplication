@@ -66,6 +66,11 @@
             <asp:SqlDataSource ID="SqlDataSource7" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString8 %>" SelectCommand="SELECT top(1) *  FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
             <asp:SqlDataSource ID="SqlDataSource8" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString9 %>" SelectCommand="SELECT * FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
             <asp:SqlDataSource ID="SqlDataSourceAll" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString17 %>" SelectCommand="SELECT * FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
+            <asp:SqlDataSource ID="SqlDataSource9" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString22 %>" SelectCommand="SELECT [UnID] FROM [Items1] WHERE ([ID] = @ID)">
+                <SelectParameters>
+                    <asp:SessionParameter Name="ID" SessionField="ID" Type="Int32" />
+                </SelectParameters>
+            </asp:SqlDataSource>
             <br />
         </div>
         <div style="border: thin solid #C0C0C0; position: relative; width: auto; top: auto; left: auto; height: auto;" class="auto-style3">
@@ -295,6 +300,8 @@
             <asp:Button ID="Button3" runat="server" BorderColor="Black" BorderStyle="Solid" BorderWidth="2px" CssClass="auto-style3" Height="40px" Text="Submit" Width="160px" OnClick="Button3_Click" />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <asp:Button ID="Button5" runat="server" BorderColor="Black" BorderStyle="Solid" BorderWidth="2px" CssClass="auto-style3" Height="40px" Text="Cancel" Width="160px" OnClick="Button5_Click" />
+                            <br />
+                            <br />
                         </div>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>

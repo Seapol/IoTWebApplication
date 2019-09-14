@@ -25,8 +25,9 @@ namespace IoTWebApplication
         {
             GridViewRow gr = GridView1.SelectedRow;
 
-            int indexOfUnID = 1;
-            Session["UnID"] = gr.Cells[indexOfUnID].Text;
+            int indexOfID = 0;
+            //Session["UnID"] = gr.Cells[indexOfUnID].Text;
+            Session["ID"] = gr.Cells[indexOfID].Text;
             Session["WorkMode"] = WorkMode.Modify.ToString();
             this.Response.Write("<script>window.location='WebFormMyWork.aspx'</script>");
         }

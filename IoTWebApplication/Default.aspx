@@ -14,8 +14,8 @@
     </div>
 
     <div>
-            <div class="text-center" style="border: thick solid #CCCCCC; position: relative; width: auto; height: 300px; top: -2147483648%; left: 0px; visibility: visible; display: block;">
-                    <span style="font-size: xx-large">My Work</span><br />
+            <div class="text-center" style="border: thick solid #C0C0C0; position: relative; width: auto; height: 300px; top: -2147483648%; left: 0px; visibility: visible; display: block;">
+                    <span style="font-size: xx-large">Request Working Board</span><br />
                     <span style="font-size: x-large">Hello,
                     <em><strong>
                     <asp:LoginName ID="LoginName1" runat="server" />
@@ -25,13 +25,14 @@
                     </span>&nbsp;<asp:Button ID="Button1" runat="server" BackColor="#C2CDD6" BorderColor="Black" BorderStyle="Solid" BorderWidth="2px" Font-Bold="True" Font-Size="X-Large" ForeColor="White" Text="Create   &gt;&gt;" OnClick="Button1_Click" />
                     <br />
                     <br />
-                    <span style="font-size: x-large">Please click Review button to review the items in the database via your account.<br />
+                    <span style="font-size: x-large">Please click Modify button to update or review the items in the database via your account.<br />
                     </span><asp:Button ID="Button2" runat="server" BackColor="#C2CDD6" BorderColor="Black" BorderStyle="Solid" BorderWidth="2px" Font-Bold="True" Font-Size="X-Large" ForeColor="White" Text="Modify  &gt;&gt;" OnClick="Button2_Click" />
                 </div>
-                <div style="border: thick solid #CCCCCC; position: relative; width: auto; height: 300px; top: -2147483648%; left: 0px; visibility: visible; display: block; font-size: xx-large;" class="text-center">
-                    Review &amp; Approval<br />
+                <div style="border: thick solid #008000; position: relative; width: auto; height: 300px; top: -2147483648%; left: 0px; visibility: visible; display: block; font-size: xx-large;" class="text-center">
+                    Approver Review Board<br />
                     <br />
-                    <span style="font-size: x-large">Please click Review button to review the items in the database<br />
+                    <span style="font-size: x-large">Please click Review button to review and approve the items in the database<br />
+                    <br />
                     <asp:Button ID="Button3" runat="server" BackColor="#C2CDD6" BorderColor="Black" BorderStyle="Solid" BorderWidth="2px" Font-Bold="True" Font-Size="X-Large" ForeColor="White" Text="Review  &gt;&gt;" OnClick="Button3_Click" />
                     </span>
         </div>

@@ -33,10 +33,20 @@ namespace IoTWebApplication
             var id_number = Request.QueryString["ID"];
             var UniqueID = Request.QueryString["UnID"];
 
+            
+
             id = int.Parse(id_number.ToString());
             UnID = UniqueID.ToString();
 
+            Session["ID"] = id;
+            Session["UnID"] = UnID;
+
             Approver = Context.User.Identity.Name.Substring(Context.User.Identity.Name.IndexOf('\\') + 1);
+
+
+            //SqlDataSource3.FilterExpression = String.Format("[ID] = {0}", id);
+            //SqlDataSource4.FilterExpression = String.Format("[ID] = {0}", id);
+            //SqlDataSource5.FilterExpression = String.Format("[ID] = {0}", id);
 
 
             AcquireExistingItem(UnID);
@@ -173,10 +183,14 @@ UPDATE [dbo].[Items1]
             if (File.Exists(ProjectMainPartStoredFileFootPrint))
             {
 
-                var path = ProjectMainPartStoredFileFootPrint.Trim();
+                var filefullpath = ProjectMainPartStoredFileFootPrint.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
         }
@@ -186,11 +200,14 @@ UPDATE [dbo].[Items1]
             AcquireExistingItem(UnID);
             if (File.Exists(ProjectMainPartStoredFileLogicalSymbol))
             {
-
-                var path = ProjectMainPartStoredFileLogicalSymbol.Trim();
+                var filefullpath = ProjectMainPartStoredFileLogicalSymbol.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
         }
@@ -201,10 +218,14 @@ UPDATE [dbo].[Items1]
             if (File.Exists(ProjectMainPartStoredFileDataSheet))
             {
 
-                var path = ProjectMainPartStoredFileDataSheet.Trim();
+                var filefullpath = ProjectMainPartStoredFileDataSheet.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                 Response.Clear();
-                Response.ContentType = "text/plain";
-                Response.TransmitFile(path);
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
                 Response.End();
             }
         }
@@ -215,10 +236,14 @@ UPDATE [dbo].[Items1]
                 if (File.Exists(MiscStoredFile))
                 {
 
-                    var path = MiscStoredFile.Trim();
+                    var filefullpath = MiscStoredFile.Trim();
+                    var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                    string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
                     Response.Clear();
-                    Response.ContentType = "text/plain";
-                    Response.TransmitFile(path);
+                    Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                    Response.ContentType = "application/unknow";
+                    //Response.ContentType = "text/plain";
+                    Response.TransmitFile(filefullpath);
                     Response.End();
                 }
         }
@@ -228,13 +253,16 @@ UPDATE [dbo].[Items1]
                 AcquireExistingItem(UnID);
                 if (File.Exists(ProjectMainPartStoredFileFootPrintFinal))
                 {
-
-                    var path = ProjectMainPartStoredFileFootPrintFinal.Trim();
-                    Response.Clear();
-                    Response.ContentType = "text/plain";
-                    Response.TransmitFile(path);
-                    Response.End();
-                }
+                var filefullpath = ProjectMainPartStoredFileFootPrintFinal.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
+                Response.Clear();
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
+                Response.End();
+            }
         }
 
         protected void LinkButtonFinalLogicalSymbol_Click(object sender, EventArgs e)
@@ -243,12 +271,16 @@ UPDATE [dbo].[Items1]
                 if (File.Exists(ProjectMainPartStoredFileLogicalSymbolFinal))
                 {
 
-                    var path = ProjectMainPartStoredFileLogicalSymbolFinal.Trim();
-                    Response.Clear();
-                    Response.ContentType = "text/plain";
-                    Response.TransmitFile(path);
-                    Response.End();
-                }
+                var filefullpath = ProjectMainPartStoredFileLogicalSymbolFinal.Trim();
+                var path = filefullpath.Substring(0, filefullpath.LastIndexOf('\\') + 1);
+                string fileName = filefullpath.Substring(filefullpath.LastIndexOf('\\') + 1);
+                Response.Clear();
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + fileName);
+                Response.ContentType = "application/unknow";
+                //Response.ContentType = "text/plain";
+                Response.TransmitFile(filefullpath);
+                Response.End();
+            }
         }
     }
 }

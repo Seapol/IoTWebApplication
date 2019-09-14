@@ -153,9 +153,11 @@ namespace IoTWebApplication
             //    //SqlDataSource2.Update();
             //}
 
+
+
             Session["WorkMode"] = WorkMode.Review.ToString();
-            Session["ID"] = gr.Cells[indexOfID];
-            Session["UnID"] = gr.Cells[indexOfUnID].Text.Trim();
+            Session["ID"] = gr.Cells[indexOfID].Text;
+            //Session["UnID"] = gr.Cells[indexOfUnID].Text.Trim();
 
             this.Response.Write("<script>window.location='WebFormMyWork.aspx'</script>");
 
@@ -297,14 +299,16 @@ namespace IoTWebApplication
 
         protected void GridView3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int indexOfUnID = 1;
+            //int indexOfUnID = 1;
+            int indexOfID = 0;
 
             GridViewRow gr = GridView3.SelectedRow;
 
-            UnID = gr.Cells[indexOfUnID].Text;
+            string ID = gr.Cells[indexOfID].Text;
 
-            Session["UnID"] = UnID;
+            //Session["UnID"] = UnID;
 
+            Session["ID"] = ID;
 
             this.Response.Write("<script>window.location='WebFormMyWork.aspx'</script>");
 

@@ -45,6 +45,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -132,6 +135,9 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="login.aspx" />
+    <Content Include="TextFile1.txt" />
+    <Content Include="WebForm1.aspx" />
+    <Content Include="WebFormEmailDialog.aspx" />
     <Content Include="WebFormModifyMyWork.aspx" />
     <Content Include="WebFormMyWork.aspx" />
     <Content Include="WebFormNewItem1.aspx" />
@@ -243,6 +249,20 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
+    <Compile Include="WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebFormEmailDialog.aspx.cs">
+      <DependentUpon>WebFormEmailDialog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebFormEmailDialog.aspx.designer.cs">
+      <DependentUpon>WebFormEmailDialog.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WebFormModifyMyWork.aspx.cs">
       <DependentUpon>WebFormModifyMyWork.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -300,6 +320,9 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

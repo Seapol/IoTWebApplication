@@ -21,6 +21,15 @@
         }
         .auto-style6 {
             text-align: left;
+            font-size: medium;
+            margin-left: 80px;
+        }
+        .auto-style8 {
+            font-size: medium;
+        }
+        .auto-style9 {
+            font-size: x-large;
+            width: 843px;
         }
     </style>
 </head>
@@ -33,31 +42,83 @@
             <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString10 %>" SelectCommand="SELECT * FROM [Items1] ORDER BY [DateTimeUTC] DESC"></asp:SqlDataSource>
             <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString11 %>" SelectCommand="SELECT * FROM [Items1]" UpdateCommand="UPDATE Items1 SET Approver = N'', IsApproved = 1, Comments = '', Summary = ''"></asp:SqlDataSource>
             <span class="auto-style5">Summary</span><br />
-            <asp:TextBox ID="TextBox1" runat="server" CssClass="auto-style4" Height="300px" ReadOnly="True" TextMode="MultiLine" Width="90%"></asp:TextBox>
+            <asp:TextBox ID="TextBox1" runat="server" CssClass="auto-style4" Height="300px" ReadOnly="True" TextMode="MultiLine" Width="90%" Visible="False" Rows="100"></asp:TextBox>
             <br />
+            <div class="auto-style3">
+                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource3" HorizontalAlign="Center" Width="90%" Caption="Project Information">
+                    <Columns>
+                        <asp:BoundField DataField="ID" HeaderText="ID" InsertVisible="False" ReadOnly="True" SortExpression="ID" />
+                        <asp:BoundField DataField="DateTimeUTC" HeaderText="DateTimeUTC" SortExpression="DateTimeUTC" />
+                        <asp:BoundField DataField="Initiator" HeaderText="Initiator" SortExpression="Initiator" />
+                        <asp:BoundField DataField="ProjectCritical" HeaderText="ProjectCritical" SortExpression="ProjectCritical" />
+                        <asp:BoundField DataField="ProjectStatus" HeaderText="ProjectStatus" SortExpression="ProjectStatus" />
+                        <asp:BoundField DataField="ProjectName" HeaderText="ProjectName" SortExpression="ProjectName" />
+                        <asp:CheckBoxField DataField="IsDoubleCheck" HeaderText="IsDoubleCheck" SortExpression="IsDoubleCheck" />
+                        <asp:BoundField DataField="SpecialRequirements" HeaderText="SpecialRequirements" SortExpression="SpecialRequirements" />
+                    </Columns>
+                </asp:GridView>
+            </div>
+            <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString19 %>" SelectCommand="SELECT [ID], [DateTimeUTC], [Initiator], [ProjectCritical], [ProjectStatus], [ProjectName], [IsDoubleCheck], [SpecialRequirements] FROM [Items1] WHERE ([ID] = @ID)">
+                <SelectParameters>
+                    <asp:SessionParameter Name="ID" SessionField="ID" Type="Int32" />
+                </SelectParameters>
+            </asp:SqlDataSource>
+            <br />
+            <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSource4" HorizontalAlign="Center" Width="90%" Caption="Part Information">
+                <Columns>
+                    <asp:BoundField DataField="ProjectMainPartVendorName" HeaderText="ProjectMainPartVendorName" SortExpression="ProjectMainPartVendorName" />
+                    <asp:BoundField DataField="ProjectMainPartVendorPN" HeaderText="ProjectMainPartVendorPN" SortExpression="ProjectMainPartVendorPN" />
+                    <asp:BoundField DataField="ProjectMainPartDescription" HeaderText="ProjectMainPartDescription" SortExpression="ProjectMainPartDescription" />
+                    <asp:BoundField DataField="ProjectAlternativeSourceInfo" HeaderText="ProjectAlternativeSourceInfo" SortExpression="ProjectAlternativeSourceInfo" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString20 %>" SelectCommand="SELECT [ProjectMainPartVendorName], [ProjectMainPartVendorPN], [ProjectMainPartDescription], [ProjectAlternativeSourceInfo] FROM [Items1] WHERE ([ID] = @ID)">
+                <SelectParameters>
+                    <asp:SessionParameter Name="ID" SessionField="ID" Type="Int32" />
+                </SelectParameters>
+            </asp:SqlDataSource>
+            <br />
+            <asp:GridView ID="GridView3" runat="server" AutoGenerateColumns="False" Caption="Uploaded Files" DataSourceID="SqlDataSource5" HorizontalAlign="Center" Width="90%">
+                <Columns>
+                    <asp:BoundField DataField="ProjectMainPartStoredFileDataSheet" HeaderText="ProjectMainPartStoredFileDataSheet" SortExpression="ProjectMainPartStoredFileDataSheet" />
+                    <asp:BoundField DataField="ProjectMainPartStoredFileFootPrint" HeaderText="ProjectMainPartStoredFileFootPrint" SortExpression="ProjectMainPartStoredFileFootPrint" />
+                    <asp:BoundField DataField="ProjectMainPartStoredFileLogicalSymbol" HeaderText="ProjectMainPartStoredFileLogicalSymbol" SortExpression="ProjectMainPartStoredFileLogicalSymbol" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource5" runat="server" ConnectionString="<%$ ConnectionStrings:IoTConnectionString21 %>" SelectCommand="SELECT [ProjectMainPartStoredFileDataSheet], [ProjectMainPartStoredFileFootPrint], [ProjectMainPartStoredFileLogicalSymbol] FROM [Items1] WHERE ([ID] = @ID)">
+                <SelectParameters>
+                    <asp:SessionParameter Name="ID" SessionField="ID" Type="Int32" />
+                </SelectParameters>
+            </asp:SqlDataSource>
             <span class="auto-style5">
             <div class="auto-style6">
-            <span class="auto-style5">
                 <br />
-                <asp:LinkButton ID="LinkButtonDataSheet" runat="server" OnClick="LinkButtonDataSheet_Click">Review DataSheet File</asp:LinkButton>
-            </span>
                 <br />
-                <asp:LinkButton ID="LinkButtonFootPrint" runat="server" OnClick="LinkButtonFootPrint_Click">Review Referernce FootPrint File</asp:LinkButton>
+                <div class="auto-style9">
+                <asp:Label ID="Label1" runat="server" Text="[Part DataSheet File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]:" CssClass="auto-style8"></asp:Label>
+                    <span class="auto-style8">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:LinkButton ID="LinkButtonDataSheet" runat="server" OnClick="LinkButtonDataSheet_Click">Review</asp:LinkButton>
                 <br />
-                <asp:LinkButton ID="LinkButtonLogicalSymbol" runat="server" OnClick="LinkButtonLogicalSymbol_Click">Review Reference LogicalSymbol File</asp:LinkButton>
+                <asp:Label ID="Label2" runat="server" Text="[Reference FootPrint File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]:"></asp:Label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:LinkButton ID="LinkButtonFootPrint" runat="server" OnClick="LinkButtonFootPrint_Click">Review</asp:LinkButton>
+                <br />
+                <asp:Label ID="Label3" runat="server" Text="[Reference Logical Symbol File&nbsp; ]:"></asp:Label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:LinkButton ID="LinkButtonLogicalSymbol" runat="server" OnClick="LinkButtonLogicalSymbol_Click">Review</asp:LinkButton>
                 <br />
                 <asp:LinkButton ID="LinkButtonFinalFootPrint" runat="server" OnClick="LinkButtonFinalFootPrint_Click" Visible="False">Review Final FootPrint File</asp:LinkButton>
                 <br />
                 <asp:LinkButton ID="LinkButtonFinalLogicalSymbol" runat="server" OnClick="LinkButtonFinalLogicalSymbol_Click" Visible="False">Review Final LogicalSymbol File</asp:LinkButton>
                 <br />
                 <asp:LinkButton ID="LinkButtonMisc" runat="server" OnClick="LinkButtonMisc_Click" Visible="False">Review Misc File</asp:LinkButton>
+                    </span>
+                </div>
                 <br />
-                <br />
-&nbsp;&nbsp;&nbsp; <span class="auto-style5">
+&nbsp;&nbsp;&nbsp; 
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
-            </div>
-            <br />
+                </div>
             Comments<br />
             <asp:TextBox ID="TextBox2" runat="server" CssClass="auto-style4" Height="200px" Width="90%" TextMode="MultiLine"></asp:TextBox>
             </span>
